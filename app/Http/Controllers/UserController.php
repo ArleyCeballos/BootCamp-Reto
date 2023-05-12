@@ -10,12 +10,22 @@ class UserController extends Controller
 {
     public function index()
     {
-        return view('users.index', [
-            'users' => User::latest()->paginate()
+        return view('store.users.index', [
+            'users' => User::paginate(10)
         ]);
     }
 
-  
+    public function destroy ($id){
+        User::destroy($id);
+        return redirect('users');
+    }
+
+    
+    public function create()
+    {
+        return view ('store.users.create');
+
+    }
 
    
 }
