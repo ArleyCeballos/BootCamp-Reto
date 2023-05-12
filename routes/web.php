@@ -2,7 +2,9 @@
 
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\UserController;
+use App\Models\User;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\CategorieController;
 
 /*
 |--------------------------------------------------------------------------
@@ -19,13 +21,17 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/admin', function () {
-    return view('admin');
-})->middleware(['auth', 'verified'])->name('admin');
+
+Route::get('/home', function () {
+    return view('store.index');
+})->middleware(['auth', 'verified'])->name('home');
 
 Route::get('/dashboard', function () {
+    
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
+
+
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -33,7 +39,14 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-Route::resource('users', UserController::class)->except('show');
+
+Route::middleware(['auth', 'verified'])->name('users')->group(function () {
+    Route::resource('/users', UserController::class);
+});
+
+// Route::resource('/users', UserController::class)->except('show');
+
+Route::resource('categorie', CategorieController::class);
 
 
 require __DIR__ . '/auth.php';
