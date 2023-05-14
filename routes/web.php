@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\Permission\RoleController;
 use App\Http\Controllers\UserController;
 use App\Models\User;
 use Illuminate\Support\Facades\Route;
@@ -39,14 +40,19 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
+Route::middleware(['auth','verified'])->group(function () {
+    Route::resource('/roles',RoleController::class);
+    Route::resource('/users', UserController::class);    
+    Route::post('/roles/create/{id}', [RoleController::class, 'create'])->name('roles.create');
 
-Route::middleware(['auth', 'verified'])->name('users')->group(function () {
-    Route::resource('/users', UserController::class);
 });
 
-// Route::resource('/users', UserController::class)->except('show');
 
-Route::resource('categorie', CategorieController::class);
+
+
+
+
+
 
 
 require __DIR__ . '/auth.php';

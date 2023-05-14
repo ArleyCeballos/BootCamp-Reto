@@ -176,6 +176,7 @@
               </li>
             </ul>
           </li>
+          @hasrole('admin')
           <li class="nav-item">
             <a href="#" class="nav-link">
               <i class="nav-icon fas fa-edit"></i>
@@ -199,6 +200,7 @@
               </li>
             </ul>
           </li>
+          @endhasrole
           <li class="nav-item">
             <a href="#" class="nav-link">
               <i class="nav-icon fas fa-table"></i>
