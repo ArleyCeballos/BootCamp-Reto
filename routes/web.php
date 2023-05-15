@@ -6,6 +6,7 @@ use App\Http\Controllers\UserController;
 use App\Models\User;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CategorieController;
+use App\Http\Controllers\ProductController;
 
 /*
 |--------------------------------------------------------------------------
@@ -27,9 +28,9 @@ Route::get('/home', function () {
     return view('store.index');
 })->middleware(['auth', 'verified'])->name('home');
 
+
 Route::get('/dashboard', function () {
-    
-    return view('dashboard');
+    return view('/dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 
@@ -40,10 +41,18 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-Route::middleware(['auth','verified'])->group(function () {
-    Route::resource('/roles',RoleController::class);
-    Route::resource('/users', UserController::class);    
-    Route::post('/roles/create/{id}', [RoleController::class, 'create'])->name('roles.create');
+Route::middleware(['auth', 'verified'])->group(function () {
+    Route::resource('/roles', RoleController::class);
+    Route::resource('/users', UserController::class);
+    Route::post('/roles/assign/{id}', [RoleController::class, 'assign'])->name('roles.assign');
+    Route::delete('/roles/remove/{id}', [RoleController::class, 'remove'])->name('roles.remove');
+    Route::post('/roles/create', [RoleController::class, 'create'])->name('roles.create');
+    Route::resource('/categories', CategorieController::class);
+    Route::resource('/products', ProductController::class);
+    Route::post('/categories/search', [CategorieController::class, 'search'])->name('categories.search');
+    Route::post('/products/search', [ProductController::class, 'search'])->name('products.search');
+
+
 
 });
 

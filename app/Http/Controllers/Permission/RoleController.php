@@ -14,19 +14,36 @@ class RoleController extends Controller
      */
     public function index()
     {
-        // $roles = Role::select('id', 'name')->with('permissions')->orderByDesc('id')->get();
-        // return $roles;
+        return view('store.users.roles', [
+            'roles' => Role::paginate(10)
+        ]);
     }
 
     /**
      * Show the form for creating a new resource.
      */
-    public function create($id)
+    public function create(Request $request)
+    {
+        $request->validate([
+            'nombre_rol' => 'required|unique:roles,name'
+        ]);
+    
+        $rol = Role::create(['name' => $request->nombre_rol]);
+    
+        return redirect()->back()->with('success', 'Rol creado correctamente');
+    
+    }
+
+    public function assign($id)
     {
         User::find($id)->assignRole('visible');
         return redirect('users');
     }
-
+    public function remove($id)
+    {
+        User::find($id)->removeRole('visible');
+        return redirect('users');
+    }
     /**
      * Store a newly created resource in storage.
      */
@@ -56,8 +73,8 @@ class RoleController extends Controller
      */
     public function update(Request $request, Role $rol)
     {
-        
-        
+
+
     }
 
     /**
@@ -65,7 +82,17 @@ class RoleController extends Controller
      */
     public function destroy($id)
     {
-        User::find($id)->removeRole('visible');
-        return redirect('users');
+        // Buscar el rol por su ID
+        $rol = Role::find($id);
+
+        // Verificar si se encontró el rol
+        if ($rol) {
+            // Eliminar el rol
+            $rol->delete();
+
+            return redirect("roles");
+        } else {
+            return "El rol no existe";
+        }
     }
 }

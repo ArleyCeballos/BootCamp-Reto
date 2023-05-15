@@ -42,13 +42,16 @@ class UserFactory extends Factory
 
     public function configure()
     {
-        return $this->afterCreating(function (User $user) {
-            // Obtener el rol que deseas asignar al usuario
-            $role = Role::where('name', 'visible')->first();
 
+
+        return $this->afterCreating(function (User $user) {
+            // Obtener el rol por ID que deseas asignar al usuario
+            $role = Role::find(2);
+        
             // Agregar el rol al usuario
             $user->syncRoles([$role]);
         });
+        
     }
 
  

@@ -13,16 +13,27 @@ class CategorieController extends Controller
      */
     public function index()
     {
-        return view('');
+        return view('store.categories.index', [
+            'categories' => Categorie::paginate(10)
+        ]);
     }
+
+    public function search(Request $request)
+    {
+        $name = $request->input('categorie');
+        $categories = Categorie::where('categorie', 'like', "%$name%")->get();
+
+
+        return view('store.categories.template', ['categories' => $categories]);
+    }
+
 
     /**
      * Show the form for creating a new resource.
      */
     public function create()
     {
-        //
-        return view('store.categorie.index');
+
     }
 
     /**
@@ -60,8 +71,10 @@ class CategorieController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Categorie $categorie)
+    public function destroy($id)
     {
-        //
+        $categorie = Categorie::findOrFail($id);
+        $categorie->delete();
+        return redirect()->route('categories.index')->with('success', 'Categoría eliminada correctamente');
     }
 }
