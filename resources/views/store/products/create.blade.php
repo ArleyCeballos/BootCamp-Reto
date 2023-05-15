@@ -34,11 +34,12 @@
                             </div>
                             <div class="form-group">
                                 <label for="categorie">Category:</label>
-                                <select class="form-control" id="categorie" name="category_id">
+                                <select class="form-control" id="categorie" name="categorie_id">
                                     @foreach($categories as $category)
-                                        @if($category->status == '1')
+                                       
                                             <option value="{{ $category->id }}">{{ $category->categorie }}</option>
-                                        @endif
+                                        
+                                      
                                     @endforeach
                                 </select>
                             </div>

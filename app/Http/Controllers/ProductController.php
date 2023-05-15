@@ -42,19 +42,38 @@ class ProductController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(UpdateProductRequest $request)
-    {
-        $product = new Product();
-        $product->code = $request->validated()['code'];
-        $product->name = $request->validated()['name'];
-        $product->stock = $request->validated()['stock'];
-        $product->description = $request->validated()['description'];
-        $product->status = $request->validated()['status'];
-        $product->categorie_id = $request->validated()['categorie_id'];
+    public function store(Request $request)
+    {   
+        $request->validate([
+            'code' => 'required',
+            'name' => 'required',
+            'stock' => 'required|numeric',
+            'description' => 'required',
+            'status' => 'required|in:active,inactive',
+            'categorie_id' => 'required|exists:categories,id'
+        ]);
 
+
+        $product = new Product();
+        $product->code = $request->input('code');
+        $product->name = $request->input('name');
+        $product->stock = $request->input('stock');
+        $product->description = $request->input('description');
+        $product->status = $request->input('status');
+        $product->categorie_id = $request->input('categorie_id');
         $product->save();
-        return redirect()->route('products.index')
-        ->with('success', 'Product created successfully.');
+
+
+
+        try {
+            $product->save();
+            return redirect()->route('products.index')->with('success', 'Product created successfully.');
+        } catch (\Exception $e) {
+            return redirect()->route('products.index')->with('error', 'Error creating product: ' . $e->getMessage());
+        }
+
+
+
     }
 
     /**
